@@ -1,0 +1,21 @@
+{
+  "name": "cost-gate-orchestrator",
+  "version": "1.0.0",
+  "description": "Cost-gate policy and automation for AI agent orchestration",
+  "main": "orchestrator-cost-gate.js",
+  "scripts": {
+    "start": "node orchestrator-cost-gate.js",
+    "override": "node override-models-until.js ./agents-config-safety.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ai",
+    "cost-control",
+    "orchestrator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
