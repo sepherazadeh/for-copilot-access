@@ -1,0 +1,43 @@
+{
+  "default_model": "gpt-codex",
+  "budget_control": {
+    "per_run_cost_soft_usd": 3,
+    "per_run_cost_hard_usd": 10,
+    "model_policy": {
+      "blocked_models_until": {
+        "gpt-5": "2025-12-31T23:59:59Z",
+        "gpt-4.1": "2025-11-30T23:59:59Z"
+      },
+      "fallback_order": [
+        "gpt-codex",
+        "gpt-4.1",
+        "gpt-5"
+      ]
+    },
+    "per_agent_monthly_quota_tokens": {
+      "frontend-coder": 100000,
+      "backend-coder": 150000,
+      "devops-coder": 80000
+    }
+  },
+  "agents": [
+    {
+      "id": "frontend-coder",
+      "role": "Frontend Developer",
+      "model": "gpt-5",
+      "description": "Specializes in React, TypeScript, and modern frontend development"
+    },
+    {
+      "id": "backend-coder",
+      "role": "Backend Developer",
+      "model": "gpt-4.1",
+      "description": "Specializes in Node.js, databases, and API development"
+    },
+    {
+      "id": "devops-coder",
+      "role": "DevOps Engineer",
+      "model": "gpt-codex",
+      "description": "Specializes in CI/CD, infrastructure, and deployment automation"
+    }
+  ]
+}
