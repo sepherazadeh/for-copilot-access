@@ -1,0 +1,55 @@
+### Test POST /run-agent endpoint
+
+POST http://localhost:3000/run-agent
+Content-Type: application/json
+
+{
+  "agent": "code-reviewer",
+  "model": "gpt-codex",
+  "input": "Please review this code:\n\nfunction calculateTotal(items) {\n  let total = 0;\n  for (let i = 0; i < items.length; i++) {\n    total += items[i].price * items[i].quantity;\n  }\n  return total;\n}",
+  "expected_output_tokens": 150
+}
+
+###
+
+### Test with expensive model requiring approval
+
+POST http://localhost:3000/run-agent
+Content-Type: application/json
+
+{
+  "agent": "refactoring",
+  "model": "gpt-4.1",
+  "input": "Refactor this legacy codebase with 10,000 lines of code to use modern patterns and best practices.",
+  "expected_output_tokens": 5000
+}
+
+###
+
+### Get usage statistics
+
+GET http://localhost:3000/usage
+
+###
+
+### Get pending approvals
+
+GET http://localhost:3000/approvals/pending
+
+###
+
+### Approve a request (replace REQUEST_ID with actual ID)
+
+POST http://localhost:3000/approve/REQUEST_ID
+Content-Type: application/json
+
+{
+  "approved": true,
+  "reviewer": "your-name"
+}
+
+###
+
+### Health check
+
+GET http://localhost:3000/health
