@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "Cost Gate Service",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "node_modules": true,
+      "*.bak.*": true
+    }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "pwa-node",
+        "request": "launch",
+        "name": "Run Cost Gate",
+        "program": "${workspaceFolder:Cost Gate Service}/orchestrator-cost-gate.js",
+        "cwd": "${workspaceFolder:Cost Gate Service}",
+        "env": {
+          "AGENTS_CONFIG_PATH": "${workspaceFolder:Cost Gate Service}/agents-config-safety.json",
+          "USAGE_PATH": "${workspaceFolder:Cost Gate Service}/usage.json",
+          "APPROVALS_PATH": "${workspaceFolder:Cost Gate Service}/approvals.json",
+          "NODE_ENV": "development"
+        },
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+}
