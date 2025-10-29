@@ -1,0 +1,11 @@
+### POST run-agent (test from VS Code REST Client)
+POST http://localhost:3005/run-agent
+Content-Type: application/json
+
+{
+  "agentId": "frontend-coder",
+  "requestedModel": "gpt-5",
+  "prompt": "Implement product card component: responsive, accessible, props: {id, title, price, imageUrl, onAddToCart}. Use theme tokens.",
+  "max_response_tokens": 1200,
+  "is_premium": true
+}
