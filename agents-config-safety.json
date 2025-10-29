@@ -1,0 +1,50 @@
+{
+  "default_model": "gpt-codex",
+  "budget_control": {
+    "per_run_cost_soft_usd": 3,
+    "per_run_cost_hard_usd": 10,
+    "model_policy": {
+      "blocked_models_until": {
+        "gpt-5": "2025-12-31T23:59:59Z",
+        "gpt-4.1": "2025-12-31T23:59:59Z"
+      },
+      "fallback_order": [
+        "gpt-codex",
+        "gpt-4.1",
+        "gpt-5"
+      ]
+    },
+    "per_agent_monthly_quota_tokens": {
+      "frontend-coder": 100000,
+      "backend-coder": 100000,
+      "test-writer": 50000,
+      "doc-writer": 30000
+    }
+  },
+  "agents": [
+    {
+      "id": "frontend-coder",
+      "role": "Frontend Developer",
+      "model": "gpt-codex",
+      "description": "Writes frontend code with React, TypeScript, and modern best practices"
+    },
+    {
+      "id": "backend-coder",
+      "role": "Backend Developer",
+      "model": "gpt-codex",
+      "description": "Writes backend code with Node.js, API design, and database integration"
+    },
+    {
+      "id": "test-writer",
+      "role": "Test Engineer",
+      "model": "gpt-codex",
+      "description": "Writes comprehensive unit and integration tests"
+    },
+    {
+      "id": "doc-writer",
+      "role": "Documentation Specialist",
+      "model": "gpt-codex",
+      "description": "Creates clear, helpful documentation and guides"
+    }
+  ]
+}
