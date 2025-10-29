@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Run Cost Gate",
+      "program": "${workspaceFolder}/orchestrator-cost-gate.js",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "AGENTS_CONFIG_PATH": "${workspaceFolder}/agents-config-safety.json",
+        "USAGE_PATH": "${workspaceFolder}/usage.json",
+        "APPROVALS_PATH": "${workspaceFolder}/approvals.json",
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Run override-models-until (once)",
+      "program": "${workspaceFolder}/override-models-until.js",
+      "cwd": "${workspaceFolder}",
+      "args": ["${workspaceFolder}/agents-config-safety.json"],
+      "console": "integratedTerminal"
+    }
+  ]
+}
