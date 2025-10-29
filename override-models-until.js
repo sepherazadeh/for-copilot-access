@@ -1,1 +1,1 @@
-
+// This file is intentionally left empty as a placeholder for future implementation.
