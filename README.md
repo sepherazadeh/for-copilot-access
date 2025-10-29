@@ -89,22 +89,12 @@ The `verify-components.sh` script checks:
 6. ✅ Dependencies are installed
 7. ✅ Functional tests pass
 
-## Persian Language Support
-**مجموعه اصلی سیستم (Main Collection/System)**
-
-همه زیرمجموعه‌های سیستم اصلی بررسی شده‌اند:
-- ✅ فایل‌های پیکربندی اصلی
-- ✅ اسکریپت‌های اجرایی
-- ✅ ورک‌فلوهای CI/CD
-- ✅ ابزارهای توسعه
-- ✅ مستندات
-
-تمامی اجزای سیستم به درستی نامگذاری و در مکان صحیح قرار گرفته‌اند.
-
-## Files Renamed and Fixed
-- `agent-conf` → `override-models-until.js` (proper naming)
-- `vscode/tasks.json` → `.vscode/tasks.json` (correct location)
-- Added missing `agents-config-safety.json` configuration file
+## File Structure
+All system files are properly organized:
+- Configuration files in repository root
+- VS Code settings in `.vscode/` directory
+- CI/CD workflows in `.github/workflows/`
+- Verification script executable at root level
 
 ## Next Steps
 Refer to `RUNBOOK.md` for:
