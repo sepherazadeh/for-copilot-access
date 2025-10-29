@@ -1,0 +1,145 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Check Model Policy",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "override-models-until.js",
+        "./agents-config-safety.json"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Start Cost Gate Server",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "orchestrator-cost-gate.js"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "server running on port"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Test with curl: Check Health",
+      "type": "shell",
+      "command": "curl",
+      "args": [
+        "-X",
+        "GET",
+        "http://localhost:3000/health",
+        "-H",
+        "Content-Type: application/json"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Test with curl: Run Agent (Blocked Model)",
+      "type": "shell",
+      "command": "curl",
+      "args": [
+        "-X",
+        "POST",
+        "http://localhost:3000/run-agent",
+        "-H",
+        "Content-Type: application/json",
+        "-d",
+        "{\"model\":\"gpt-5\",\"prompt\":\"Test prompt\",\"estimatedInputTokens\":1000,\"estimatedOutputTokens\":500}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Test with curl: Run Agent (Allowed Model)",
+      "type": "shell",
+      "command": "curl",
+      "args": [
+        "-X",
+        "POST",
+        "http://localhost:3000/run-agent",
+        "-H",
+        "Content-Type: application/json",
+        "-d",
+        "{\"model\":\"gpt-codex\",\"prompt\":\"Test prompt\",\"estimatedInputTokens\":1000,\"estimatedOutputTokens\":500}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Install Dependencies",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "install"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ]
+}

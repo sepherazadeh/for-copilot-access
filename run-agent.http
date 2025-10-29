@@ -1,0 +1,91 @@
+### Cost Gate Orchestrator - HTTP Tests
+### Use REST Client extension in VS Code to run these requests
+
+@baseUrl = http://localhost:3000
+
+### Health Check
+GET {{baseUrl}}/health
+Content-Type: application/json
+
+###
+
+### Reload Configuration
+POST {{baseUrl}}/reload-config
+Content-Type: application/json
+
+###
+
+### Test 1: Blocked Model (gpt-5) - Should receive fallback suggestion
+POST {{baseUrl}}/run-agent
+Content-Type: application/json
+
+{
+  "model": "gpt-5",
+  "prompt": "Write a hello world program",
+  "estimatedInputTokens": 1000,
+  "estimatedOutputTokens": 500
+}
+
+###
+
+### Test 2: Blocked Model (gpt-4.1) - Should receive fallback suggestion
+POST {{baseUrl}}/run-agent
+Content-Type: application/json
+
+{
+  "model": "gpt-4.1",
+  "prompt": "Explain quantum computing",
+  "estimatedInputTokens": 2000,
+  "estimatedOutputTokens": 1000
+}
+
+###
+
+### Test 3: Allowed Model (gpt-codex) - Should succeed
+POST {{baseUrl}}/run-agent
+Content-Type: application/json
+
+{
+  "model": "gpt-codex",
+  "prompt": "Debug this code snippet",
+  "estimatedInputTokens": 1500,
+  "estimatedOutputTokens": 800
+}
+
+###
+
+### Test 4: High Token Count - Test cost threshold warning
+POST {{baseUrl}}/run-agent
+Content-Type: application/json
+
+{
+  "model": "gpt-codex",
+  "prompt": "Large processing task",
+  "estimatedInputTokens": 50000,
+  "estimatedOutputTokens": 30000
+}
+
+###
+
+### Test 5: Missing Model Parameter - Should return 400 error
+POST {{baseUrl}}/run-agent
+Content-Type: application/json
+
+{
+  "prompt": "Test without model"
+}
+
+###
+
+### Test 6: Unknown Model - Should succeed (no block)
+POST {{baseUrl}}/run-agent
+Content-Type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "prompt": "Simple query",
+  "estimatedInputTokens": 500,
+  "estimatedOutputTokens": 300
+}
+
+###
