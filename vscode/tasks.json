@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start cost-gate (dev)",
+      "type": "shell",
+      "command": "node orchestrator-cost-gate.js",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "env": {
+        "AGENTS_CONFIG_PATH": "${workspaceFolder}/agents-config-safety.json"
+      }
+    },
+    {
+      "label": "Run override-models-until",
+      "type": "shell",
+      "command": "node override-models-until.js ${workspaceFolder}/agents-config-safety.json",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    }
+  ]
+}
