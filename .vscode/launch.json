@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Override Models Script",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/override-models-until.js",
+      "args": [
+        "${workspaceFolder}/agents-config-safety.json"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Start Cost Gate Server",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/orchestrator-cost-gate.js",
+      "console": "integratedTerminal",
+      "env": {
+        "PORT": "3000",
+        "CONFIG_PATH": "${workspaceFolder}/agents-config-safety.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Cost Gate Server",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/orchestrator-cost-gate.js",
+      "console": "integratedTerminal",
+      "env": {
+        "PORT": "3000",
+        "CONFIG_PATH": "${workspaceFolder}/agents-config-safety.json",
+        "NODE_ENV": "development"
+      },
+      "outputCapture": "std"
+    }
+  ]
+}

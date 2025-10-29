@@ -1,0 +1,149 @@
+name: Enforce Model Policy
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'agents-config-safety.json'
+      - 'override-models-until.js'
+      - '**/*.js'
+      - '**/*.json'
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-model-policy:
+    name: Check and enforce model policy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run override-models-until script
+        id: override
+        run: |
+          echo "Running model policy check..."
+          node override-models-until.js ./agents-config-safety.json
+          
+          # Check if there were changes
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Configuration file was updated"
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes to configuration"
+          fi
+
+      - name: Scan for premium model mentions
+        id: scan
+        run: |
+          echo "🔍 Scanning repository for direct premium model mentions..."
+          
+          # Define premium models to check
+          PREMIUM_MODELS=("gpt-5" "gpt-4.1" "claude-opus" "claude-3-opus")
+          
+          # Initialize findings
+          FINDINGS=""
+          
+          # Scan files (excluding node_modules, .git, and this workflow)
+          for model in "${PREMIUM_MODELS[@]}"; do
+            echo "Checking for: $model"
+            
+            results=$(grep -r -n "$model" \
+              --include="*.js" \
+              --include="*.ts" \
+              --include="*.json" \
+              --include="*.yml" \
+              --include="*.yaml" \
+              --exclude-dir=node_modules \
+              --exclude-dir=.git \
+              --exclude-dir=dist \
+              --exclude="enforce-model-policy.yml" \
+              --exclude="agents-config-safety.json" \
+              . || true)
+            
+            if [ -n "$results" ]; then
+              FINDINGS="${FINDINGS}\n### Found mentions of: $model\n\`\`\`\n${results}\n\`\`\`\n"
+            fi
+          done
+          
+          if [ -n "$FINDINGS" ]; then
+            echo "findings=true" >> $GITHUB_OUTPUT
+            echo "$FINDINGS" > scan-results.txt
+            echo "⚠️ Found premium model mentions"
+          else
+            echo "findings=false" >> $GITHUB_OUTPUT
+            echo "✅ No premium model mentions found"
+          fi
+
+      - name: Commit updated configuration
+        if: steps.override.outputs.changes == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add agents-config-safety.json
+          git commit -m "chore: auto-update model policy (expired blocks removed)"
+          git push
+
+      - name: Create issue for premium model findings
+        if: steps.scan.outputs.findings == 'true' && github.ref == 'refs/heads/main'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const findings = fs.readFileSync('scan-results.txt', 'utf8');
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Premium Model References Found',
+              body: `## Premium Model Policy Violation
+              
+              The automated scan has detected direct references to premium models in the codebase.
+              
+              ${findings}
+              
+              ### Action Required
+              
+              Please review these references and either:
+              1. Remove direct model references and use the cost-gate orchestrator
+              2. Update \`agents-config-safety.json\` to allow these models
+              3. Document the business justification for premium model usage
+              
+              See [RUNBOOK.md](./RUNBOOK.md) for more information.
+              
+              ---
+              *This issue was automatically created by the model policy enforcement workflow.*`,
+              labels: ['security', 'cost-management', 'automated']
+            });
+
+      - name: Summary
+        run: |
+          echo "### Model Policy Check Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Configuration changes: ${{ steps.override.outputs.changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Premium model mentions: ${{ steps.scan.outputs.findings }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.override.outputs.changes }}" == "true" ]; then
+            echo "✅ Configuration file was updated - expired model blocks removed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No configuration changes needed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.scan.outputs.findings }}" == "true" ]; then
+            echo "⚠️ Premium model references detected - review required" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No premium model references found" >> $GITHUB_STEP_SUMMARY
+          fi

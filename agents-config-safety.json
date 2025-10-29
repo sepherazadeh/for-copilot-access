@@ -1,0 +1,30 @@
+{
+  "modelPolicy": {
+    "blockedModels": {
+      "gpt-5": {
+        "blockedUntil": "2025-11-01T00:00:00Z",
+        "reason": "High cost model - requires approval"
+      },
+      "gpt-4.1": {
+        "blockedUntil": "2025-11-01T00:00:00Z",
+        "reason": "High cost model - requires approval"
+      }
+    },
+    "fallbackOrder": [
+      "gpt-codex",
+      "gpt-4.1",
+      "gpt-5"
+    ],
+    "defaultModel": "gpt-codex",
+    "costThresholds": {
+      "warn": 100,
+      "block": 500,
+      "currency": "USD"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-29T00:00:00Z",
+    "description": "Soft policy configuration for model cost management"
+  }
+}
