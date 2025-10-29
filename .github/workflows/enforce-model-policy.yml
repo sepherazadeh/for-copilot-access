@@ -1,0 +1,49 @@
+name: Enforce model policy
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/*'
+      - 'feat/*'
+  schedule:
+    - cron: '0 2 * * *' # nightly at 02:00 UTC
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install deps (if any)
+        run: |
+          npm ci || true
+
+      - name: Run override-models-until (enforce policy)
+        run: |
+          node override-models-until.js ./agents-config-safety.json
+        # This modifies the config in the workspace; if you'd like to commit it back, add steps to commit and open PR.
+
+  scan:
+    runs-on: ubuntu-latest
+    needs: enforce
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan repo for premium model names
+        run: |
+          set -e
+          echo "Scanning for direct mentions of gpt-5 or gpt-4.1..."
+          if grep -R --line-number -E "gpt-5|gpt-4\.1" --exclude-dir=.git || true; then
+            echo "Found occurrences (artifact below)."
+            grep -R --line-number -E "gpt-5|gpt-4\.1" --exclude-dir=.git || true
+          else
+            echo "No direct mentions found."
+          fi
