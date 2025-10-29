@@ -1,0 +1,88 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Cost-Gate Orchestrator",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "orchestrator-cost-gate.js",
+        "3000"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Run Override Models Script",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "override-models-until.js",
+        "./agents-config-safety.json"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "View Usage Stats",
+      "type": "shell",
+      "command": "curl",
+      "args": [
+        "-s",
+        "http://localhost:3000/usage",
+        "|",
+        "json_pp"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "View Pending Approvals",
+      "type": "shell",
+      "command": "curl",
+      "args": [
+        "-s",
+        "http://localhost:3000/approvals/pending",
+        "|",
+        "json_pp"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Test Run Agent (Sample)",
+      "type": "shell",
+      "command": "curl",
+      "args": [
+        "-X",
+        "POST",
+        "http://localhost:3000/run-agent",
+        "-H",
+        "Content-Type: application/json",
+        "-d",
+        "{\\\"agent\\\":\\\"code-reviewer\\\",\\\"model\\\":\\\"gpt-codex\\\",\\\"input\\\":\\\"Review this code: function hello() { return 'world'; }\\\",\\\"expected_output_tokens\\\":100}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}

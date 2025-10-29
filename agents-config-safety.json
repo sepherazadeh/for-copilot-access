@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "description": "Soft policy configuration for AI agents with cost controls",
+  "blocked_models_until": {
+    "gpt-5": "2025-11-01",
+    "gpt-4.1": "2025-11-01"
+  },
+  "fallback_order": [
+    "gpt-codex",
+    "gpt-4.1",
+    "gpt-5"
+  ],
+  "agents": {
+    "code-reviewer": {
+      "preferred_model": "gpt-4.1",
+      "monthly_quota_usd": 50.0,
+      "description": "Reviews code changes and suggests improvements"
+    },
+    "bug-fixer": {
+      "preferred_model": "gpt-codex",
+      "monthly_quota_usd": 30.0,
+      "description": "Analyzes and fixes bugs in code"
+    },
+    "documentation": {
+      "preferred_model": "gpt-codex",
+      "monthly_quota_usd": 20.0,
+      "description": "Generates and updates documentation"
+    },
+    "refactoring": {
+      "preferred_model": "gpt-4.1",
+      "monthly_quota_usd": 40.0,
+      "description": "Refactors code for better quality"
+    },
+    "test-generator": {
+      "preferred_model": "gpt-codex",
+      "monthly_quota_usd": 25.0,
+      "description": "Generates unit and integration tests"
+    }
+  },
+  "global_settings": {
+    "soft_threshold_usd": 100.0,
+    "hard_threshold_usd": 500.0,
+    "notification_email": "team@example.com",
+    "require_approval_above_usd": 10.0
+  }
+}
