@@ -47,3 +47,4 @@ jobs:
           else
             echo "No direct mentions found."
           fi
+          vscode/tasks.json
