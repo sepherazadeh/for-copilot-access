@@ -8,6 +8,13 @@ on:
       - 'feat/*'
   schedule:
     - cron: '0 2 * * *' # nightly at 02:00 UTC
+  workflow_dispatch:
+    inputs:
+      run_db_migrations:
+        description: 'Run DB migrations via SUPABASE_DB_URL (optional)'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   enforce:
@@ -29,6 +36,14 @@ jobs:
         run: |
           node override-models-until.js ./agents-config-safety.json
         # This modifies the config in the workspace; if you'd like to commit it back, add steps to commit and open PR.
+
+      - name: Run DB migrations (optional)
+        if: ${{ github.event.inputs.run_db_migrations == 'true' }}
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          echo "SUPABASE_DB_URL is set: ${SUPABASE_DB_URL:+yes}"
+          echo "Run your migration command here, e.g. npm run migrate or npx supabase db push"
 
   scan:
     runs-on: ubuntu-latest
